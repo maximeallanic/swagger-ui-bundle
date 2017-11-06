@@ -77,6 +77,9 @@
             url: "{{ resource_list_url }}",
             dom_id: '#swagger-ui',
             deepLinking: true,
+            docExpansion: "{{ js_config.expansion }}",
+            tagsSorter: "{{ js_config.sorter }}",
+            operationsSorter: "{{ js_config.sorter }}",
             presets: [
                 SwaggerUIBundle.presets.apis,
                 SwaggerUIStandalonePreset
@@ -85,9 +88,9 @@
                 SwaggerUIBundle.plugins.DownloadUrl
             ],
             layout: "StandaloneLayout"
-        })
+        });
 
-        window.ui = ui
+        window.ui = ui;
     }
 </script>
 </body>
