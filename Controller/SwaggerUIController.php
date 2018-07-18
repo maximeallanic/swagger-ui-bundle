@@ -29,7 +29,7 @@ class SwaggerUIController extends Controller
 
         $url = rtrim($url, '/');
 
-        return $this->render('ALSwaggerUIBundle:SwaggerUI:index.html.twig', array(
+        return $this->render('ALSwaggerUIBundle::index.html.twig', array(
             'resource_list_url' => $url,
             'js_config' => $jsConfig,
             'auth_config' => $authConfig

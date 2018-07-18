@@ -6,6 +6,7 @@
     <title>Swagger UI</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('bundles/alswaggerui/swagger-ui.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('bundles/alswaggerui/theme-material.css') }}"/>
     <link rel="icon" href="{{ asset('bundles/alswaggerui/favicon-32x32.png') }}" sizes="32x32"/>
     <link rel="icon" href="{{ asset('bundles/alswaggerui/favicon-16X16.png') }}" sizes="16X16"/>
     <style>
@@ -65,10 +66,30 @@
     </defs>
 </svg>
 
-<div id="swagger-ui"></div>
+<!--div class="swagger-ui swagger-container">
+    <div class="topbar">
+        <div class="wrapper">
+            <div class="topbar-wrapper">
+                <a href="#" title="Swagger UX" class="link">
+                    <img height="30" width="30" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAqRJREFUeNrEVz1s00AUfnGXii5maMXoEUEHVwIpEkPNgkBdMnQoU5ytiKHJwpp2Q2JIO8DCUDOxIJFIVOoWZyJSh3pp1Q2PVVlcCVBH3ufeVZZ9Zye1Ay86nXV+ue/9fO/lheg/Se02X1rvksmbnTiKvuxQMBNgBnN4a/LCbmnUAP6JV58NCUsBC8CuAJxGPF47OgNqBaA93tolUhnx6jC4NxGwyOEwlccyAs+3kwdzKq0HDn2vEBTi8J2XpyMaywNDE157BhXUE3zJhlq8GKq+Zd2zaWHepPA8oN9XkfLmRdOiJV4XUUg/IyWncLjCYY/SHndV2u7zHr3bPKZtdxgboJOnthvrfGj/oMf3G0r7JVmNlLfKklmrt2MvvcNO7LFOhoFHfuAJI5o6ta10jpt5CQLgwXhXG2YIwvu+34qf78ybOjWTnWwkgR36d7JqJOrW0hHmNrKg9xhiS4+1jFmrxymh03B0w+6kURIAu3yHtOD5oaUNojMnGgbcctNvwdAnyxvxRR+/vaJnjzbpzcZX+nN1SdGv85i9eH8w3qPO+mdm/y4dnQ1iI8Fq6Nf4cxL6GWSjiFDSs0VRnxC5g0xSB2cgHpaseTxfqOv5uoHkNQ6Ha/N1Yz9mNMppEkEkYKj79q6uCq4bCHcSX3fJ0Vk/k9siASjCm1N6gZH6Ec9IXt2WkFES2K/ixoIyktJPAu/ptOA1SgO5zqtr6KASJPF0nMV8dgMsRhRPOcMwqQAOoi0VAIMLAEWJ6YYC1c8ibj1GP51RqwzYwZVMHQuvOzMCBUtb2tGHx5NAdLKqp5AX7Ng4d+Zi8AGDI9z1ijx9yaCH04y3GCP2S+QcvaGl+pcxyUBvinFlawoDQjHSelX8hQEoIrAq8p/mgC88HOS1YCl/BRgAmiD/1gn6Nu8AAAAASUVORK5CYII=" alt="Swagger UI">
+                    <span>swagger</span>
+                </a>
+                <form class="download-url-wrapper">
+                    <input type="text" class="download-url-input" placeholder="Username" style="">
+                    <input type="password" class="download-url-input" placeholder="Password" style="">
+                    <button class="download-url-button button" type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div-->
+<div id="swagger-ui">
+
+</div>
 
 <script src="{{ asset('bundles/alswaggerui/swagger-ui-bundle.js') }}" type='text/javascript'></script>
 <script src="{{ asset('bundles/alswaggerui/swagger-ui-standalone-preset.js') }}" type='text/javascript'></script>
+<script src="{{ asset('bundles/alswaggerui/plugin.js') }}" type='text/javascript'></script>
 <script>
     window.onload = function() {
 
@@ -85,12 +106,53 @@
                 SwaggerUIStandalonePreset
             ],
             plugins: [
-                SwaggerUIBundle.plugins.DownloadUrl
+                SwaggerUIBundle.plugins.DownloadUrl,
+                SwaggerUIBundle.plugins.Auth,
+                SwaggerUIBundle.plugins.SwaggerJs,
+                SwaggerUIBundle.plugins.Err,
+                SwaggerUIBundle.plugins.TopBar
             ],
+            displayRequestDuration: true,
+            validatorUrl: null,
             layout: "StandaloneLayout"
         });
 
         window.ui = ui;
+
+    /*
+        document.querySelector('.download-url-wrapper').onsubmit = function (event) {
+            event.preventDefault();
+            var username = document.querySelector('.download-url-wrapper > input[type=text]').value;
+            var password = document.querySelector('.download-url-wrapper > input[type=password]').value;
+            var basePath = window.ui.specSelectors.basePath();
+            var result = ui.specSelectors.operationsWithTags();
+
+            console.log(ui.getComponents());
+
+            var auth = result.get('authentication')
+            auth.forEach(function (path) {
+                if (path.get('id') === 'post-/users/login') {
+                    console.log(path, path.get('path'));
+                    var input = JSON.stringify({
+                        username,
+                        password
+                    });
+                    var parameters = path.get('operation').get('parameters');
+                    parameters.forEach(function (parameter) {
+                        if (parameter.get('name') === 'body') {
+                            parameter.set('value', input);
+                            console.log(parameter.get('value'), input, parameter);
+                        }
+                    });
+
+                    //ui.specActions.execute(ui.specActions.changeParam(, 'body', 'body', input, false));
+                }
+                //console.log(ui.specActions.executeRequest());
+            });
+            console.log(username, password, result, ui);
+        };*/
+
+
     }
 </script>
 </body>
